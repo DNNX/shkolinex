@@ -1,0 +1,2 @@
+defmodule Shkolinex do
+end
