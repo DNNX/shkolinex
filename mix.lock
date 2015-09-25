@@ -1,4 +1,5 @@
-%{"floki": {:hex, :floki, "0.4.1"},
+%{"csv": {:hex, :csv, "1.1.4"},
+  "floki": {:hex, :floki, "0.4.1"},
   "hackney": {:hex, :hackney, "1.3.2"},
   "httpoison": {:hex, :httpoison, "0.7.3"},
   "idna": {:hex, :idna, "1.0.2"},

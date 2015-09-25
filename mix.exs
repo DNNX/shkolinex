@@ -29,7 +29,8 @@ defmodule Shkolinex.Mixfile do
   defp deps do
     [
       {:floki, "~> 0.4"},
-      {:httpoison, "~> 0.7.2"}
+      {:httpoison, "~> 0.7.2"},
+      {:csv, "~> 1.1.0"}
     ]
   end
 end
