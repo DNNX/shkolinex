@@ -1,4 +1,4 @@
-defmodule Shkoliner.Parser do
+defmodule Shkolinex.Parser do
   def scrape_url(url) do
     res = HTTPoison.get!(url)
     scrape_page(res.body)
