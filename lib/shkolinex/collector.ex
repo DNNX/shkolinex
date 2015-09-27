@@ -8,7 +8,7 @@ defmodule Shkolinex.Collector do
   end
 
   def collect_urls(urls, file_name) do
-    GenServer.call(__MODULE__, {:collect_urls, urls, file_name})
+    GenServer.call(__MODULE__, {:collect_urls, urls, file_name}, :infinity)
   end
 
   # Server (callbacks)
@@ -20,14 +20,13 @@ defmodule Shkolinex.Collector do
       await_writer(me, file_name, [])
     end
 
-    distributor = spawn_link fn ->
-      loop_distributor(urls)
-    end
+    Shkolinex.Distributor.start_link
+    Shkolinex.Distributor.enqueue_all(urls)
 
     1..8
     |> Enum.map(fn _ ->
         spawn_link(fn ->
-           loop_worker(distributor, writer, me)
+           loop_worker(writer, me)
          end)
        end)
     |> Enum.map(fn _pid ->
@@ -43,32 +42,15 @@ defmodule Shkolinex.Collector do
     {:reply, :ok, state}
   end
 
-  defp loop_worker(distributor, writer, owner) do
-    send distributor, {:wannajob, self}
-    receive do
+  defp loop_worker(writer, owner) do
+    case Shkolinex.Distributor.checkout do
       {:url, url} ->
         articles = Shkolinex.Parser.scrape_url(url)
         send(writer, {:msg, articles, url})
-        loop_worker(distributor, writer, owner)
+        loop_worker(writer, owner)
       :nojobs ->
         send owner, :workerdone
         IO.puts "wkr done"
-    end
-  end
-
-  defp loop_distributor([url|rest]) do
-    receive do
-      {:wannajob, worker} ->
-        send worker, {:url, url}
-        loop_distributor(rest)
-    end
-  end
-
-  defp loop_distributor([]) do
-    receive do
-      {:wannajob, worker} ->
-        send worker, :nojobs
-        loop_distributor([])
     end
   end
 
