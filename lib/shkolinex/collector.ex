@@ -20,7 +20,6 @@ defmodule Shkolinex.Collector do
       await_writer(me, file_name, [])
     end
 
-    Shkolinex.Distributor.start_link
     Shkolinex.Distributor.enqueue_all(urls)
 
     1..8

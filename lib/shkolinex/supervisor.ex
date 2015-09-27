@@ -7,7 +7,8 @@ defmodule Shkolinex.Supervisor do
 
   def init([]) do
     children = [
-      worker(Shkolinex.Collector, [[]])
+      worker(Shkolinex.Collector, [[]]),
+      worker(Shkolinex.Distributor, [[]])
     ]
 
     supervise(children, strategy: :one_for_one)
