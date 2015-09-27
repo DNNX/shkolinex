@@ -1,5 +1,19 @@
 defmodule Shkolinex.Collector do
+  use GenServer
+
+  # Client
+
+  def start_link(default) do
+    GenServer.start_link(__MODULE__, default, name: __MODULE__)
+  end
+
   def collect_urls(urls, file_name) do
+    GenServer.call(__MODULE__, {:collect_urls, urls, file_name})
+  end
+
+  # Server (callbacks)
+
+  def handle_call({:collect_urls, urls, file_name}, _from, state) do
     me = self
     writer = spawn_link fn ->
       IO.puts("writer started")
@@ -25,6 +39,8 @@ defmodule Shkolinex.Collector do
     receive do
       :wdone -> IO.puts "OK ALL DONE"
     end
+
+    {:reply, :ok, state}
   end
 
   defp loop_worker(distributor, writer, owner) do
