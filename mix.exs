@@ -31,7 +31,8 @@ defmodule Shkolinex.Mixfile do
     [
       {:floki, "~> 0.4"},
       {:httpoison, "~> 0.7.2"},
-      {:csv, "~> 1.1.0"}
+      {:csv, "~> 1.1.0"},
+      {:poolboy, github: "devinus/poolboy"}
     ]
   end
 end
