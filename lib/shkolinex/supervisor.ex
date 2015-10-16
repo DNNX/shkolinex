@@ -17,7 +17,7 @@ defmodule Shkolinex.Supervisor do
       worker(Shkolinex.Collector, [[]]),
       worker(Shkolinex.Distributor, [[]]),
       :poolboy.child_spec(:download_pool, poolboy_config, []),
-      supervisor(Task.Supervisor, [[name: Shkolinex.DownloadSupervisor, restart: :transient]])
+      supervisor(Task.Supervisor, [[name: Shkolinex.DownloadSupervisor, restart: :temporary]])
     ]
 
     supervise(children, strategy: :one_for_one)
